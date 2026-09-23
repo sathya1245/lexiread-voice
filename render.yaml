@@ -4,6 +4,12 @@
 # One-click: https://render.com/deploy?repo=https://github.com/sathya1245/lexiread-voice
 #
 # This is the ZERO-COST setup: the free instance type, no payment card, no disk.
+#
+# NOTE ON THE BUILD: Render injects these env vars into the BUILD environment as
+# well as the runtime, and npm omits devDependencies whenever NODE_ENV=production.
+# Vite (and Tailwind) live in devDependencies, so a plain `npm ci` leaves the
+# build with no `vite` binary and fails with "vite: not found" (exit 127).
+# `--include=dev` is what keeps that from happening — do not drop it.
 # Two consequences worth knowing before a demo:
 #   1. SQLite lives on ephemeral storage, so profiles, sessions and flagged
 #      words reset whenever the instance restarts or you deploy again.
@@ -25,7 +31,8 @@ services:
     runtime: node
     plan: free
     region: singapore
-    buildCommand: npm ci && npm run build
+    # --include=dev is load-bearing: see the build note above.
+    buildCommand: npm ci --include=dev && npm run build
     startCommand: node server/src/index.js
     healthCheckPath: /api/health
     autoDeploy: true

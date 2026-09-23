@@ -33,8 +33,11 @@ jobs:
           node-version: '22'
           cache: npm
 
+      # --include=dev keeps this working if NODE_ENV is ever set to production
+      # in repo-wide variables: npm would otherwise skip devDependencies and
+      # `npm run build` would fail with "vite: not found".
       - name: Install dependencies
-        run: npm ci
+        run: npm ci --include=dev
 
       - name: Unit tests (shared + server, including the API/socket integration test)
         run: npm test

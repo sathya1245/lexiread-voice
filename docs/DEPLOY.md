@@ -44,6 +44,13 @@ Fastest path — click, approve, done:
 3. When it finishes, open the service URL. Speech recognition needs HTTPS —
    Render gives you that automatically.
 
+> **Editing the build command?** Render injects a service's environment variables
+> into the *build* environment as well as the runtime, and npm omits
+> devDependencies whenever `NODE_ENV=production`. Vite and Tailwind are
+devDependencies, so `npm ci` on its own leaves the build with no `vite` binary
+> and it dies with `vite: not found` (exit 127). That is why the blueprint uses
+> `npm ci --include=dev`.
+
 ### Free tier: what to expect during a demo
 
 - The instance **sleeps after ~15 minutes idle**. The next request takes ~30–60s
