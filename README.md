@@ -328,8 +328,14 @@ In `render.yaml` change `plan: starter` to `plan: free` and delete the `disk:`
 block — the app runs fine, it just forgets profiles when the instance restarts.
 
 Ready-made configs are in the repo root: `Dockerfile`, `render.yaml`,
-`fly.toml`, `.github/workflows/ci.yml`. Put the service behind HTTPS (Render and
-Fly do this for you) — the microphone only works on secure origins.
+`fly.toml`. Put the service behind HTTPS (Render and Fly do this for you) — the
+microphone only works on secure origins.
+
+> **CI is parked at [`docs/ci.yml`](docs/ci.yml).** GitHub blocks OAuth apps
+> (`gh`) from writing into `.github/workflows/`, so run
+> `gh auth refresh -h github.com -s workflow` and move the file into place —
+> the four-line recipe is at the top of the file. It runs the same `npm test`
+> and `npm run build` you can run locally, plus a server smoke test.
 
 Full walkthrough, including static-hosting recipes and a post-deploy checklist:
 **[docs/DEPLOY.md](docs/DEPLOY.md)**.
