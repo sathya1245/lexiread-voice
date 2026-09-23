@@ -3,16 +3,27 @@
 #
 # One-click: https://render.com/deploy?repo=https://github.com/sathya1245/lexiread-voice
 #
-# `plan: starter` is paid and always-on, and the disk below is what keeps
-# profiles, sessions and flagged words across deploys. For a zero-cost demo
-# instance, use `plan: free` and DELETE the `disk:` block — SQLite then lives on
-# ephemeral storage, so data resets on restart and the service sleeps when idle.
+# This is the ZERO-COST setup: the free instance type, no payment card, no disk.
+# Two consequences worth knowing before a demo:
+#   1. SQLite lives on ephemeral storage, so profiles, sessions and flagged
+#      words reset whenever the instance restarts or you deploy again.
+#   2. The instance sleeps after ~15 minutes idle; the first request after that
+#      takes ~30-60s while it wakes. Open the URL once before judging starts.
+#
+# To make progress stick, switch to the paid always-on setup:
+#   * `plan: starter`  (or higher)
+#   * add back the disk block:
+#         disk:
+#           name: lexiread-voice-data
+#           mountPath: /var/data
+#           sizeGB: 1
+#   * and point DATA_DIR at the mount:  DATA_DIR: /var/data
 services:
   - type: web
     # Render derives the public URL from this name: lexiread-voice.onrender.com
     name: lexiread-voice
     runtime: node
-    plan: starter
+    plan: free
     region: singapore
     buildCommand: npm ci && npm run build
     startCommand: node server/src/index.js
@@ -21,14 +32,11 @@ services:
     envVars:
       - key: NODE_ENV
         value: production
+      # /tmp is always writable; the app creates this directory on boot
+      # (server/src/db.js). Swap to /var/data if you attach a disk.
       - key: DATA_DIR
-        value: /var/data
+        value: /tmp/lexiread-data
       - key: OCR_LANGS
         value: eng
       - key: DICTIONARY_TIMEOUT_MS
         value: "6000"
-    disk:
-      # Profiles, reading sessions and flagged words live here.
-      name: lexiread-voice-data
-      mountPath: /var/data
-      sizeGB: 1

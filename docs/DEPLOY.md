@@ -39,13 +39,24 @@ Fastest path — click, approve, done:
    - build: `npm ci && npm run build`
    - start: `node server/src/index.js`
    - health check: `/api/health`
-   - a 1 GB disk mounted at `/var/data` with `DATA_DIR=/var/data`
-   - `plan: starter` (paid, always-on, keeps data). For a free demo instance set
-     `plan: free` and delete the `disk:` block — the app still runs, but SQLite
-     lives on ephemeral storage, so profiles and progress reset on restart and
-     the service sleeps after ~15 minutes idle.
+   - `plan: free` and no disk, so **no payment card is required**
+   - `DATA_DIR=/tmp/lexiread-data` — writable, but wiped on restart
 3. When it finishes, open the service URL. Speech recognition needs HTTPS —
    Render gives you that automatically.
+
+### Free tier: what to expect during a demo
+
+- The instance **sleeps after ~15 minutes idle**. The next request takes ~30–60s
+  to wake it, so open the URL in a browser tab before anyone is watching.
+- SQLite lives on ephemeral storage: profiles, reading sessions, flagged words
+  and the dashboard reset on every restart and deploy.
+
+### Making progress persist
+
+Switch to the always-on setup — `plan: starter` (or higher), a disk, and
+`DATA_DIR` pointing at it. The exact block is in the comments at the top of
+`render.yaml`. Nothing else changes: `server/src/db.js` creates the directory if
+it is missing, and every path is relative to `DATA_DIR`.
 
 ## 2. Fly.io
 

@@ -322,10 +322,15 @@ docker build -t lexiread . && docker run -p 8787:8787 -v lexiread-data:/data lex
 [![Deploy to Render](https://render.com/images/deploy-to-render-button.svg)](https://render.com/deploy?repo=https://github.com/sathya1245/lexiread-voice)
 
 The button above runs the `render.yaml` blueprint: it builds the client, starts
-the single Node service, health-checks `/api/health`, and attaches a 1 GB disk at
-`/var/data` so profiles and progress survive deploys. **No card for the demo?**
-In `render.yaml` change `plan: starter` to `plan: free` and delete the `disk:`
-block — the app runs fine, it just forgets profiles when the instance restarts.
+the single Node service and health-checks `/api/health`. It is set up to need
+**no payment card** (`plan: free`, no disk), so two demo-time caveats apply: the
+instance sleeps after ~15 minutes idle — open the URL once before judging starts,
+since the next request takes ~30–60s to wake it — and SQLite sits on ephemeral
+storage, so profiles and progress reset on restart.
+
+Make progress stick by switching to the paid always-on setup: set
+`plan: starter`, point `DATA_DIR` at `/var/data`, and add back the `disk:` block
+(an exact snippet is in the comments at the top of `render.yaml`).
 
 Ready-made configs are in the repo root: `Dockerfile`, `render.yaml`,
 `fly.toml`. Put the service behind HTTPS (Render and Fly do this for you) — the
