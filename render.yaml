@@ -9,7 +9,8 @@
 # ephemeral storage, so data resets on restart and the service sleeps when idle.
 services:
   - type: web
-    name: lexiread
+    # Render derives the public URL from this name: lexiread-voice.onrender.com
+    name: lexiread-voice
     runtime: node
     plan: starter
     region: singapore
@@ -28,6 +29,6 @@ services:
         value: "6000"
     disk:
       # Profiles, reading sessions and flagged words live here.
-      name: lexiread-data
+      name: lexiread-voice-data
       mountPath: /var/data
       sizeGB: 1
