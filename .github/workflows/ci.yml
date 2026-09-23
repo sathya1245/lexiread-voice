@@ -1,0 +1,42 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  test:
+    name: Tests and build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Unit tests (shared + server, including the API/socket integration test)
+        run: npm test
+
+      - name: Build the client
+        run: npm run build
+
+      - name: Smoke test the built server
+        run: |
+          node server/src/index.js &
+          SERVER_PID=$!
+          for i in $(seq 1 20); do
+            if curl -fsS http://127.0.0.1:8787/api/health > /dev/null; then break; fi
+            sleep 1
+          done
+          curl -fsS http://127.0.0.1:8787/api/health
+          curl -fsS http://127.0.0.1:8787/ | grep -q "LexiRead"
+          kill $SERVER_PID
+        env:
+          PORT: 8787
+          DATA_DIR: ${{ runner.temp }}/lexiread-data

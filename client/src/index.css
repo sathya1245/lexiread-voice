@@ -1,0 +1,274 @@
+@import '@fontsource-variable/lexend/wght.css';
+@import '@fontsource/opendyslexic/latin-400.css';
+@import '@fontsource/opendyslexic/latin-700.css';
+@import 'tailwindcss';
+
+/* --------------------------------------------------------------------- */
+/* LexiRead design tokens                                                */
+/*                                                                       */
+/* Every colour the app uses is a CSS variable so the Irlen-style theme  */
+/* presets can be swapped without touching a single component. The       */
+/* defaults are deliberately soft: no pure white, no pure black, and     */
+/* enough contrast for WCAG AA in every preset.                          */
+/* --------------------------------------------------------------------- */
+
+@theme {
+  --font-lexend: 'Lexend Variable', 'Lexend', Verdana, system-ui, sans-serif;
+  --font-opendyslexic: 'OpenDyslexic', 'Comic Sans MS', Verdana, sans-serif;
+  --font-plain: Verdana, 'Segoe UI', system-ui, sans-serif;
+  --font-ui: 'Lexend Variable', 'Lexend', system-ui, sans-serif;
+}
+
+:root {
+  --lr-bg: #faf4e6;
+  --lr-surface: #fffaf0;
+  --lr-surface-2: #f4ead6;
+  --lr-ink: #2f2a21;
+  --lr-ink-soft: #5d5648;
+  --lr-accent: #1f6f6b;
+  --lr-accent-ink: #ffffff;
+  --lr-accent-soft: #d8ece9;
+  --lr-rule: #e0d5be;
+  --lr-read: #cfe8d5;
+  --lr-read-ink: #1f4a2c;
+  --lr-current: #ffd991;
+  --lr-current-ink: #4a3410;
+  --lr-flag-close: #f0b866;
+  --lr-flag-skip: #9db4cf;
+  --lr-flag-hard: #b79ad6;
+  --lr-tint: transparent;
+  --lr-focus: #12433f;
+}
+
+[data-theme='cream'] {
+  --lr-bg: #faf3e2;
+  --lr-surface: #fffaf0;
+  --lr-surface-2: #f3e9d3;
+}
+
+[data-theme='blue'] {
+  --lr-bg: #e8f1f7;
+  --lr-surface: #f6fbfd;
+  --lr-surface-2: #dbe9f2;
+  --lr-ink: #22303a;
+  --lr-ink-soft: #4c6272;
+  --lr-rule: #c9dbe7;
+  --lr-accent: #1d5c86;
+  --lr-accent-soft: #d5e7f3;
+}
+
+[data-theme='yellow'] {
+  --lr-bg: #fbf4cf;
+  --lr-surface: #fffceb;
+  --lr-surface-2: #f5eab5;
+  --lr-ink: #38320f;
+  --lr-rule: #e5d99f;
+  --lr-accent: #6b5a12;
+  --lr-accent-soft: #f0e6b8;
+}
+
+[data-theme='mint'] {
+  --lr-bg: #e7f2ea;
+  --lr-surface: #f7fdf9;
+  --lr-surface-2: #d9ebdf;
+  --lr-ink: #22322a;
+  --lr-rule: #c8e0d1;
+  --lr-accent: #1f6b45;
+  --lr-accent-soft: #d3ebdd;
+}
+
+[data-theme='lavender'] {
+  --lr-bg: #eeeaf7;
+  --lr-surface: #faf8ff;
+  --lr-surface-2: #e2dcf1;
+  --lr-ink: #2c2739;
+  --lr-rule: #d8d0ec;
+  --lr-accent: #5a4a91;
+  --lr-accent-soft: #e0daf4;
+}
+
+[data-theme='grey'] {
+  --lr-bg: #eceae5;
+  --lr-surface: #f7f6f3;
+  --lr-surface-2: #e0ded8;
+  --lr-ink: #262524;
+  --lr-rule: #d3d0c9;
+  --lr-accent: #3c5a5a;
+  --lr-accent-soft: #dde5e4;
+}
+
+[data-theme='dark'] {
+  --lr-bg: #1d2226;
+  --lr-surface: #262d32;
+  --lr-surface-2: #2f383e;
+  --lr-ink: #f3efe6;
+  --lr-ink-soft: #c3beb2;
+  --lr-rule: #3d474e;
+  --lr-accent: #74c9c0;
+  --lr-accent-ink: #10231f;
+  --lr-accent-soft: #2b3b3d;
+  --lr-read: #35543f;
+  --lr-read-ink: #e8f7ec;
+  --lr-current: #8a6c1f;
+  --lr-current-ink: #fff7e0;
+  --lr-focus: #9fe8df;
+}
+
+html,
+body,
+#root {
+  min-height: 100%;
+}
+
+body {
+  margin: 0;
+  background-color: var(--lr-bg);
+  color: var(--lr-ink);
+  font-family: var(--font-ui);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+/* Painted, adjustable tint (Irlen-style colour overlay) */
+#lexiread-tint {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 30;
+  mix-blend-mode: multiply;
+}
+
+.lr-focusable:focus-visible,
+a:focus-visible,
+button:focus-visible,
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible,
+[tabindex]:focus-visible {
+  outline: 3px solid var(--lr-focus);
+  outline-offset: 2px;
+  border-radius: 6px;
+}
+
+/* ------------------------------------------------------------------ */
+/* Reading surface                                                     */
+/* ------------------------------------------------------------------ */
+
+.lr-surface {
+  font-family: var(--lr-reader-font, var(--font-lexend));
+  font-size: var(--lr-font-size, 19px);
+  line-height: var(--lr-line-height, 1.7);
+  letter-spacing: var(--lr-letter-spacing, 0.01em);
+  word-spacing: var(--lr-word-spacing, 0.06em);
+  max-width: var(--lr-measure, 66ch);
+}
+
+.lr-word {
+  border-radius: 5px;
+  padding: 0 1px;
+  cursor: pointer;
+  transition: background-color 120ms ease, color 120ms ease;
+  background: transparent;
+  border: 0;
+  font: inherit;
+  color: inherit;
+  letter-spacing: inherit;
+  text-align: left;
+}
+
+.lr-word:hover {
+  background: var(--lr-surface-2);
+}
+
+.lr-word-read {
+  background: var(--lr-read);
+  color: var(--lr-read-ink);
+}
+
+.lr-word-current {
+  background: var(--lr-current);
+  color: var(--lr-current-ink);
+  box-shadow: 0 0 0 2px var(--lr-current);
+}
+
+/* Flag styles use BOTH a non-colour cue (underline style) and a hint tooltip,
+   so meaning never depends on colour alone (WCAG 1.4.1). */
+.lr-word-close {
+  border-bottom: 2px dotted var(--lr-flag-close);
+}
+
+.lr-word-skipped {
+  border-bottom: 2px dashed var(--lr-flag-skip);
+}
+
+.lr-word-hard {
+  border-bottom: 2px solid var(--lr-flag-hard);
+}
+
+.lr-word-help {
+  outline: 2px solid var(--lr-accent);
+  outline-offset: 1px;
+}
+
+.lr-bionic b {
+  font-weight: 700;
+}
+
+.lr-legend-swatch {
+  display: inline-block;
+  width: 1.6rem;
+  height: 0.95rem;
+  border-radius: 4px;
+}
+
+/* Screen-reader-only helper */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border-width: 0;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    transition-duration: 0.001ms !important;
+  }
+}
+
+/* Gentle attention pulse for the "tap to hear this word" helper */
+@keyframes lr-soft-pulse {
+  0%,
+  100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.04);
+  }
+}
+
+.lr-pulse {
+  animation: lr-soft-pulse 2.4s ease-in-out infinite;
+}
+
+@keyframes lr-rise {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.lr-rise {
+  animation: lr-rise 220ms ease-out;
+}

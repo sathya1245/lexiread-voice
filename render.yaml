@@ -1,0 +1,26 @@
+# Render blueprint — one web service that serves both the API and the client.
+# Docs: docs/DEPLOY.md
+services:
+  - type: web
+    name: lexiread
+    runtime: node
+    plan: starter
+    region: singapore
+    buildCommand: npm ci && npm run build
+    startCommand: node server/src/index.js
+    healthCheckPath: /api/health
+    autoDeploy: true
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: DATA_DIR
+        value: /var/data
+      - key: OCR_LANGS
+        value: eng
+      - key: DICTIONARY_TIMEOUT_MS
+        value: "6000"
+    disk:
+      # Profiles, reading sessions and flagged words live here.
+      name: lexiread-data
+      mountPath: /var/data
+      sizeGB: 1

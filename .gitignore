@@ -1,0 +1,38 @@
+node_modules/
+dist/
+build/
+
+# Local database + uploaded/extracted content
+server/data/
+*.db
+*.db-wal
+*.db-shm
+
+# OCR model cache (downloaded on first use)
+eng.traineddata
+*.traineddata
+tessdata/
+
+# Environment
+.env
+.env.local
+.env.*.local
+
+# Logs
+*.log
+npm-debug.log*
+logs/
+
+# Editor / OS
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+*.swp
+
+# Test output
+coverage/
+.nyc_output/
+
+# Local tooling metadata
+.freebuff/

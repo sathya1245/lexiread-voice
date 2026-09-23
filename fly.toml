@@ -1,0 +1,35 @@
+# Fly.io configuration — `fly launch --copy-config` then `fly deploy`.
+app = "lexiread"
+primary_region = "sin"
+
+[build]
+  dockerfile = "Dockerfile"
+
+[env]
+  NODE_ENV = "production"
+  PORT = "8787"
+  HOST = "0.0.0.0"
+  DATA_DIR = "/data"
+  OCR_LANGS = "eng"
+
+[mounts]
+  source = "lexiread_data"
+  destination = "/data"
+
+[http_service]
+  internal_port = 8787
+  force_https = true
+  auto_stop_machines = "suspend"
+  auto_start_machines = true
+  min_machines_running = 0
+
+  [[http_service.checks]]
+    interval = "30s"
+    timeout = "5s"
+    grace_period = "10s"
+    method = "GET"
+    path = "/api/health"
+
+[[vm]]
+  size = "shared-cpu-1x"
+  memory = "512mb"
