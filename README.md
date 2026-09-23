@@ -319,6 +319,14 @@ npm run build && npm start          # anywhere Node 20.11+ runs
 docker build -t lexiread . && docker run -p 8787:8787 -v lexiread-data:/data lexiread
 ```
 
+[![Deploy to Render](https://render.com/images/deploy-to-render-button.svg)](https://render.com/deploy?repo=https://github.com/sathya1245/lexiread-voice)
+
+The button above runs the `render.yaml` blueprint: it builds the client, starts
+the single Node service, health-checks `/api/health`, and attaches a 1 GB disk at
+`/var/data` so profiles and progress survive deploys. **No card for the demo?**
+In `render.yaml` change `plan: starter` to `plan: free` and delete the `disk:`
+block — the app runs fine, it just forgets profiles when the instance restarts.
+
 Ready-made configs are in the repo root: `Dockerfile`, `render.yaml`,
 `fly.toml`, `.github/workflows/ci.yml`. Put the service behind HTTPS (Render and
 Fly do this for you) — the microphone only works on secure origins.

@@ -31,13 +31,19 @@ Everything else has sensible defaults — see `.env.example`.
 
 ## 1. Render (recommended, one-click blueprint)
 
-1. Push this repository to GitHub.
-2. Render dashboard → **New → Blueprint** → pick the repository.
+Fastest path — click, approve, done:
+
+1. <https://render.com/deploy?repo=https://github.com/sathya1245/lexiread-voice>
+   (or Render dashboard → **New → Blueprint** → pick the repository).
    `render.yaml` in the repo root does the rest:
    - build: `npm ci && npm run build`
    - start: `node server/src/index.js`
    - health check: `/api/health`
    - a 1 GB disk mounted at `/var/data` with `DATA_DIR=/var/data`
+   - `plan: starter` (paid, always-on, keeps data). For a free demo instance set
+     `plan: free` and delete the `disk:` block — the app still runs, but SQLite
+     lives on ephemeral storage, so profiles and progress reset on restart and
+     the service sleeps after ~15 minutes idle.
 3. When it finishes, open the service URL. Speech recognition needs HTTPS —
    Render gives you that automatically.
 

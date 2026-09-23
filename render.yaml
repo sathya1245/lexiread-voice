@@ -1,5 +1,12 @@
 # Render blueprint — one web service that serves both the API and the client.
 # Docs: docs/DEPLOY.md
+#
+# One-click: https://render.com/deploy?repo=https://github.com/sathya1245/lexiread-voice
+#
+# `plan: starter` is paid and always-on, and the disk below is what keeps
+# profiles, sessions and flagged words across deploys. For a zero-cost demo
+# instance, use `plan: free` and DELETE the `disk:` block — SQLite then lives on
+# ephemeral storage, so data resets on restart and the service sleeps when idle.
 services:
   - type: web
     name: lexiread
