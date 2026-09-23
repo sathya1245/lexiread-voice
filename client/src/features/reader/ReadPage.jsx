@@ -430,7 +430,16 @@ export function ReadPage() {
             {doc.title}
           </h1>
           <div className="flex flex-wrap items-center gap-2">
-            <SegmentedControl label="Reading mode" options={MODES} value={mode} onChange={switchMode} size="sm" />
+            <div className="order-last w-full sm:order-none sm:w-auto">
+              <SegmentedControl
+                label="Reading mode"
+                options={MODES}
+                value={mode}
+                onChange={switchMode}
+                size="sm"
+                full
+              />
+            </div>
             <Button variant="secondary" size="sm" onClick={() => setDrawer('ideas')}>
               💡 Ideas
             </Button>
@@ -497,7 +506,7 @@ export function ReadPage() {
 
       {/* Bottom control bar ------------------------------------------ */}
       <div className="fixed inset-x-0 bottom-0 z-20 border-t border-[var(--lr-rule)] bg-[var(--lr-surface)]/97 backdrop-blur">
-        <div className="mx-auto max-w-5xl space-y-3 px-3 py-3 sm:px-4">
+        <div className="mx-auto max-w-5xl space-y-2.5 px-3 py-2.5 sm:space-y-3 sm:px-4 sm:py-3">
           {mode === 'narrated' ? (
             <ListenBar
               supported={tts.supported}
@@ -556,7 +565,7 @@ export function ReadPage() {
                   >
                     ✓ I read “{words[focusWi]?.text || words[voice.cursor]?.text || 'this word'}”
                   </Button>
-                  <p className="text-xs text-[var(--lr-ink-soft)]">
+                  <p className="hidden text-xs text-[var(--lr-ink-soft)] sm:block">
                     Use ← → to move, Enter or this button to mark words read. Everything else works exactly the same.
                   </p>
                 </div>

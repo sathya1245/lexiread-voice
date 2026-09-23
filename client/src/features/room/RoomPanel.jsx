@@ -8,6 +8,7 @@
 
 import { useEffect, useState } from 'react';
 import { api } from '../../lib/api.js';
+// (NudgeToasts below keeps its own expiry timer so notes never pile up.)
 import { Alert, Button, Pill, SectionTitle } from '../../components/ui.jsx';
 import { cx } from '../../lib/format.js';
 
@@ -175,8 +176,24 @@ export function HandoffPanel({ payload, disabled }) {
   );
 }
 
-export function NudgeToasts({ nudges, onDismiss, className }) {
-  const recent = nudges.slice(-2);
+export function NudgeToasts({ nudges, onDismiss, className, ttlMs = 30000 }) {
+  // Notes fade away on their own after a minute-to-read, so nothing lingers on
+  // the reading surface while the student keeps going.
+  const [tick, setTick] = useState(0);
+  useEffect(() => {
+    if (!nudges.length) return undefined;
+    const id = setInterval(() => setTick((value) => value + 1), 5000);
+    return () => clearInterval(id);
+  }, [nudges.length]);
+
+  const cutoff = Date.now() - ttlMs;
+  const recent = nudges
+    .filter((nudge) => {
+      const at = Date.parse(nudge.at);
+      return Number.isNaN(at) ? true : at > cutoff;
+    })
+    .slice(-2);
+  void tick;
   if (!recent.length) return null;
   return (
     <div className={cx('pointer-events-none fixed inset-x-3 bottom-24 z-40 mx-auto max-w-md space-y-2', className)}>

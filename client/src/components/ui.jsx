@@ -204,9 +204,19 @@ export function Toggle({ label, checked, onChange, hint, id: idProp }) {
   );
 }
 
-export function SegmentedControl({ options, value, onChange, label, size = 'md' }) {
+export function SegmentedControl({ options, value, onChange, label, size = 'md', scroll = false, full = false }) {
   return (
-    <div role="group" aria-label={label} className="inline-flex flex-wrap gap-1 rounded-xl bg-[var(--lr-surface-2)] p-1">
+    <div
+      role="group"
+      aria-label={label}
+      className={cx(
+        'gap-1 rounded-xl bg-[var(--lr-surface-2)] p-1',
+        full ? 'flex w-full' : 'inline-flex',
+        // `scroll` keeps the options on one line inside a horizontally
+        // scrollable parent (small phones) instead of wrapping to two rows.
+        scroll ? 'flex-nowrap' : 'flex-wrap'
+      )}
+    >
       {options.map((opt) => {
         const active = opt.value === value;
         return (
@@ -217,7 +227,8 @@ export function SegmentedControl({ options, value, onChange, label, size = 'md' 
             onClick={() => onChange(opt.value)}
             title={opt.hint}
             className={cx(
-              'rounded-lg font-semibold transition-colors',
+              'whitespace-nowrap rounded-lg font-semibold transition-colors',
+              full && 'flex-1 text-center',
               size === 'sm' ? 'px-2.5 py-1 text-xs' : 'px-3 py-1.5 text-sm',
               active
                 ? 'bg-[var(--lr-surface)] text-[var(--lr-ink)] shadow-sm ring-1 ring-[var(--lr-rule)]'

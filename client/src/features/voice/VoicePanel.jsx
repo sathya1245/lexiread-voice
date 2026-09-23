@@ -56,18 +56,18 @@ export function VoicePanel({
 }) {
   return (
     <div className="space-y-3">
-      <div className="flex flex-wrap items-center justify-between gap-3">
-        <div className="flex items-center gap-2">
+      <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between sm:gap-3">
+        <div className="grid grid-cols-2 gap-2 sm:flex sm:items-center">
           {listening ? (
-            <Button onClick={onStop} variant="danger" size="lg">
+            <Button onClick={onStop} variant="danger" size="md">
               <span aria-hidden="true">■</span> Stop listening
             </Button>
           ) : (
-            <Button onClick={onStart} size="lg" disabled={!supported}>
+            <Button onClick={onStart} size="md" disabled={!supported}>
               <span aria-hidden="true">🎙️</span> Start reading out loud
             </Button>
           )}
-          <Button variant="secondary" size="lg" onClick={onTapMode}>
+          <Button variant="secondary" size="md" onClick={onTapMode}>
             Tap each word instead
           </Button>
         </div>
@@ -114,7 +114,7 @@ export function VoicePanel({
         </Alert>
       ) : null}
 
-      <p className={cx('text-xs text-[var(--lr-ink-soft)]')}>
+      <p className={cx('hidden text-xs text-[var(--lr-ink-soft)] sm:block')}>
         Quiet help after {Math.round(stuckMs / 1000)}s · {haptics ? 'haptics on' : 'haptics off'} · press{' '}
         <kbd className="rounded bg-[var(--lr-surface-2)] px-1">H</kbd> to hear the word your cursor is on.
       </p>
